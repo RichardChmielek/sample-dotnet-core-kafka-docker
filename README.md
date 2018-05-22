@@ -6,12 +6,18 @@
 
 1. Clone repository
 
-```bash
-git clone git@github.com:RichardChmielek/sample-dotnet-core-kafka-docker.git
-```
+    ```bash
+    git clone git@github.com:RichardChmielek/sample-dotnet-core-kafka-docker.git
+    ```
 
-2. Run docker compose
+2. Change directory
 
-```bash
-docker-compose up
-```
+    ```bash
+    cd sample-dotnet-core-kafka-docker
+    ```
+
+3. Run docker compose
+
+    ```bash
+    docker-compose up
+    ```
