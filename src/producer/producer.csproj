@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <Version Condition=" '$(APP_VERSION)' == '' ">0.0.0.1</Version>
+    <Version Condition=" '$(APP_VERSION)' != '' ">$(APP_VERSION)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\shared\common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Confluent.Kafka" Version="0.11.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.2" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Update="config.json" CopyToOutputDirectory="Always" />
+    <None Update="config.development.json" CopyToOutputDirectory="Always" />
+    <None Update="config.docker.json" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+</Project>

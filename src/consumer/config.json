@@ -1,0 +1,7 @@
+{
+    "group.id": "my-group-id",
+    "bootstrap.servers": "kafka:9092",
+    "auto.commit.interval.ms": "5000",
+    "auto.offset.reset": "smallest",
+    "topic": "mytopic"
+}

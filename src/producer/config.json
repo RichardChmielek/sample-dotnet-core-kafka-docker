@@ -1,0 +1,4 @@
+{
+    "bootstrap.servers": "kafka:9092",
+    "topic": "mytopic"
+}

@@ -1,0 +1,50 @@
+version: '3'
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    hostname: zookeeper
+    ports:
+      - "2181:2181"
+  kafka:
+    image: wurstmeister/kafka
+    hostname: kafka
+    ports:
+      - "9092:9092"
+      - "9094:9094"
+    links: 
+     - zookeeper
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ADVERTISED_PORT: "9092"
+      KAFKA_CREATE_TOPICS: "mytopic:1:1"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      #HOSTNAME_COMMAND: "route -n | awk '/UG[ \t]/{print $$2}'"
+      #HOSTNAME_COMMAND: curl http://169.254.169.254/latest/meta-data/public-hostname
+      HOSTNAME_COMMAND: "echo 127.0.0.1"
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9092,OUTSIDE://_{HOSTNAME_COMMAND}:9094
+      KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: OUTSIDE
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  producer:
+    build:
+      context: ./src/.
+      dockerfile: producer/dockerfile
+    image: sample.dotnet.kafka.producer:latest
+    links: 
+     - kafka
+    environment:
+      ASPNETCORE_ENVIRONMENT: docker
+  consumer:
+    build: 
+      context: ./src/.
+      dockerfile: consumer/dockerfile
+    image: sample.dotnet.kafka.consumer:latest
+    links: 
+     - kafka
+    environment:
+      ASPNETCORE_ENVIRONMENT: docker
+      GROUP_ID: docker-group
+      AUTO_OFFSET_RESET: largest
+  

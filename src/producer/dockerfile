@@ -1,0 +1,21 @@
+FROM microsoft/aspnetcore-build:2.0 AS build-env
+WORKDIR /app/shared
+# Copy csproj and restore as distinct layers
+COPY shared/*.csproj ./
+RUN dotnet restore
+
+WORKDIR /app/consumer
+# Copy csproj and restore as distinct layers
+COPY consumer/*.csproj ./
+RUN dotnet restore
+
+# Copy everything else and build
+COPY . ./..
+WORKDIR /app/producer
+RUN dotnet publish -c Release -o ../out
+
+# Build runtime image
+FROM microsoft/dotnet:2.0-runtime
+WORKDIR /app
+COPY --from=build-env /app/out .
+ENTRYPOINT ["dotnet", "producer.dll"]
